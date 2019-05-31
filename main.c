@@ -97,6 +97,29 @@ int isInTree(Tree* t, int num) {
 
 int main()
 {
+   
+   /*leitura da string*/
+   /*
+    char frase [100];
+    char letra;
+    bool pode;
+
+    for (int i = 0; i<256; i++) freqs[i]=0;
+    printf("Digite uma frase:");
+    scanf("%s",frase);
+
+    for(int x=0; frase[x] != '\0'; x++)
+    {
+        freqs[frase[x]]++;
+    }
+
+    for(int i=0;i<256;i++) {
+        if (freqs[i]) {
+              printf("<%c: %d>\n", i, freqs[i]);
+        }
+    }  
+   
+   */
   Tree* t = createTree(); /* cria uma árvore */
 
   insertTree(&t,12,'a'); /* insere o elemento 12 na árvore */
