@@ -95,31 +95,38 @@ int isInTree(Tree* t, int num) {
   return t->b==num || isInTree(t->left, num) || isInTree(t->right, num);
 }
 
+int freqs[256];
+
 int main()
 {
-   
-   /*leitura da string*/
-   /*
+    /*Leitura de Arquivo*/
+    /*
+    FILE* arq = fopen("teste.txt", "r");
+    if(arq == NULL) {
+        printf("Erro! Arquivo não encontrado!\n");
+        exit(EXIT_FAILURE);
+    }
+    // Leitura
+    char c;
+
+    
     char frase [100];
     char letra;
-    bool pode;
-
     for (int i = 0; i<256; i++) freqs[i]=0;
-    printf("Digite uma frase:");
-    scanf("%s",frase);
-
+    while(fgets(frase, 200, arq) != NULL)
+        printf("%s\n", frase);
+    fclose(arq); //Fecha o arquivo
     for(int x=0; frase[x] != '\0'; x++)
     {
         freqs[frase[x]]++;
     }
-
     for(int i=0;i<256;i++) {
         if (freqs[i]) {
               printf("<%c: %d>\n", i, freqs[i]);
         }
-    }  
+    }
    
-   */
+    */
   Tree* t = createTree(); /* cria uma árvore */
 
   insertTree(&t,12,'a'); /* insere o elemento 12 na árvore */
