@@ -34,6 +34,10 @@ Tree* createTree()
 }
 
 
+void insereLista(char c, int freq) {
+    printf("Se eu inserir <%c, %d> de forma ordenada fica mais facil\n", c, freq);
+
+}
 
 /* Função que verifica se uma árvore é vazia */
 int treeIsEmpty(Tree* t)
@@ -95,12 +99,17 @@ int isInTree(Tree* t, int num) {
   return t->b==num || isInTree(t->left, num) || isInTree(t->right, num);
 }
 
+/*int quicksort(int vetor) {
+
+  return freqs;
+}*/
+
 int freqs[256];
 
 int main()
 {
     /*Leitura de Arquivo*/
-    /*
+
     FILE* arq = fopen("teste.txt", "r");
     if(arq == NULL) {
         printf("Erro! Arquivo não encontrado!\n");
@@ -109,25 +118,34 @@ int main()
     // Leitura
     char c;
 
-    
     char frase [100];
     char letra;
     for (int i = 0; i<256; i++) freqs[i]=0;
     while(fgets(frase, 200, arq) != NULL)
         printf("%s\n", frase);
     fclose(arq); //Fecha o arquivo
+
     for(int x=0; frase[x] != '\0'; x++)
     {
         freqs[frase[x]]++;
     }
+
     for(int i=0;i<256;i++) {
         if (freqs[i]) {
-              printf("<%c: %d>\n", i, freqs[i]);
+              //printf("<%c: %d>\n", i, freqs[i]);
+              insereLista(i, freqs[i]);
         }
     }
-   
-    */
+
+
+  int maior[256];
+
+
+
+
   Tree* t = createTree(); /* cria uma árvore */
+
+
 
   insertTree(&t,12,'a'); /* insere o elemento 12 na árvore */
   insertTree(&t,15,'b'); /* insere o elemento 15 na árvore */
