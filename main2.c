@@ -15,7 +15,7 @@ typedef struct Node NODO;
 // prototipos
 void inserir(NODO** arv, int val, char c);
 void mostrar(NODO* arv);
-int pesquisar(NODO* arv, int val, double binario, int depth, char letras[]);
+int pesquisar(NODO* arv, char caracter, char letras[]);
 
 // código
 
@@ -121,34 +121,36 @@ void printree( NODO* root, int level )  //char** table, char* binary, int column
 
 
 
-char carac[256];
 
-int pesquisar(NODO* arv, int val, double binario, int depth, char c[])
+
+int pesquisar(NODO* arv, char character, char c[])
 {
-    if ( arv == NULL)
+    if(arv == NULL)
     {
-        return NULL;
+        return 0;
     }
-    if ( arv->valor == val)
+    if(arv->let == character)
     {
-        printf("{%c,%d} -> %f", arv->let, arv->valor, binario );
-        int aux = 0;
-        for(int i = depth; i>0 ; i--){
-            carac[i] = c[aux];
-            aux++;
-        }
-        return depth;
+        return 1;
     }
-    double newBin = pow(10, depth);
-    newBin += binario;
-    c[depth] = '1';
-    depth += 1;
-    pesquisar(arv->dir, val, newBin, depth,c);
-
-    c[depth-1] = '0';
-    pesquisar(arv->esq, val, binario, depth,c);
+    int lefSearch = pesquisar(arv->esq, character, c);
+    if(lefSearch == 1)
+    {
+        strcat(c, "0");
+        return 1;
+    }
+    int buscaD = pesquisar(arv->dir, character, c);
+    if(buscaD == 1)
+    {
+        strcat(c, "1");
+        return 1;
+    }
+    return 0;
 
 }
+
+
+
 
 
 
@@ -243,30 +245,27 @@ int main()
 
     }
     printree(listaArvores[0],0);
-
-
-    //double asd = pow(10,2);
-    //printf("%f\n", asd);
-
-    char letras [100];
-    int zetta = pesquisar(listaArvores[0],5,0,0,letras);
-    printf("\n");
-    //printf("%c", carac[0]);
-
-    for(int i = 10 ; i>0 ; i--){
-            if(carac[i]){
-            printf("%c", carac[i]);}
-
+//////////////////////////////////////////////////////////////////////////////////
+    FILE* writtenArq = fopen("tabela.txt", "w");
+    if(writtenArq == NULL)
+    {
+        printf("Impossível criar arq!\n");
+        perror("Erro");
+        exit(EXIT_FAILURE);
     }
 
+    for(int i = 0; i < tamArvores; i++)
+    {
+        char c[] = {0};
+        pesquisar(*listaArvores,listaArvoresOLD[i]->let, c);
+        fprintf(arq, "\nCaracter: %c\tBinario: %s", listaArvoresOLD[i]->let,strrev(c));
+    }
 
-
-
-
-
-
+    fclose(arq);
+    printf("\nDados gravados em tabela.txt\n");
 
     return 0;
 }
+
 
 
