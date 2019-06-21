@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 struct Node
 {
@@ -14,7 +15,7 @@ typedef struct Node NODO;
 // prototipos
 void inserir(NODO** arv, int val, char c);
 void mostrar(NODO* arv);
-NODO* pesquisar(NODO* arv, int val);
+int pesquisar(NODO* arv, int val, double binario, int depth, char letras[]);
 
 // código
 
@@ -42,18 +43,6 @@ void inserir(NODO** arv, int val, char c)
     }
 }
 
-NODO* pesquisar(NODO* arv, int val)
-{
-    if ( arv ==NULL)
-        return NULL;
-
-    if ( arv->valor == val)
-        return arv;
-    else if ( arv->valor > val)
-        return pesquisar(arv->esq, val);
-    else
-        return pesquisar(arv->dir, val);
-}
 
 
 
@@ -132,8 +121,34 @@ void printree( NODO* root, int level )  //char** table, char* binary, int column
 
 
 
+char carac[256];
 
+int pesquisar(NODO* arv, int val, double binario, int depth, char c[])
+{
+    if ( arv == NULL)
+    {
+        return NULL;
+    }
+    if ( arv->valor == val)
+    {
+        printf("{%c,%d} -> %f", arv->let, arv->valor, binario );
+        int aux = 0;
+        for(int i = depth; i>0 ; i--){
+            carac[i] = c[aux];
+            aux++;
+        }
+        return depth;
+    }
+    double newBin = pow(10, depth);
+    newBin += binario;
+    c[depth] = '1';
+    depth += 1;
+    pesquisar(arv->dir, val, newBin, depth,c);
 
+    c[depth-1] = '0';
+    pesquisar(arv->esq, val, binario, depth,c);
+
+}
 
 
 
@@ -188,8 +203,6 @@ int main()
         }
     }
 
-    char letras[tamArvores];
-
     printf("lista arvores nao ordenado...\n");
     for(int i=0; i<tamArvores; i++)
     {
@@ -203,9 +216,15 @@ int main()
     for(int i=0; i<tamArvores; i++)
     {
         printf("(%c:%d)", listaArvores[i]->let, listaArvores[i]->valor);
-        letras[tamArvores - i] = listaArvores[i]->let;
     }
     printf("\n");
+
+
+    NODO* listaArvoresOLD[tamArvores];
+    for(int i=0; i<tamArvores; i++)
+    {
+        listaArvoresOLD[i] = listaArvores[i];
+    }
 
 
 
@@ -224,6 +243,23 @@ int main()
 
     }
     printree(listaArvores[0],0);
+
+
+    //double asd = pow(10,2);
+    //printf("%f\n", asd);
+
+    char letras [100];
+    int zetta = pesquisar(listaArvores[0],5,0,0,letras);
+    printf("\n");
+    //printf("%c", carac[0]);
+
+    for(int i = 10 ; i>0 ; i--){
+            if(carac[i]){
+            printf("%c", carac[i]);}
+
+    }
+
+
 
 
 
