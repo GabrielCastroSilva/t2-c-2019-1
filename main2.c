@@ -24,10 +24,8 @@ NODO* listaArvores;
 
 // código
 
-void inserir(NODO** arv, int val, char c)
-{
-    if ( *arv == NULL )
-    {
+void inserir(NODO** arv, int val, char c) {
+    if ( *arv == NULL ) {
         NODO* novo;
         novo = malloc(sizeof(NODO));
         novo->valor = val;   //(*novo).valor = val;
@@ -36,15 +34,13 @@ void inserir(NODO** arv, int val, char c)
         novo->dir = NULL;
 
         *arv = novo;
-    }
-    else
-    {
+    } else {
         //if ( val < (**arv)valor)
         if ( val < (*arv)->valor)
-            //inserir(&((**arv).esq),val);
-            inserir(&((*arv)->esq), val, c);
+           //inserir(&((**arv).esq),val);
+           inserir(&((*arv)->esq), val, c);
         else
-            inserir(& ((*arv)->dir), val, c);
+           inserir(& ((*arv)->dir), val, c);
     }
 }
 
@@ -133,6 +129,7 @@ int pesquisar(NODO* arv, char character, char c[])
 
 
 
+
 int main()
 {
     /*Leitura de Arquivo*/
@@ -151,8 +148,6 @@ int main()
     char c;
     int freqs[256] = {0};
     int count = 0;
-    char frase [100];
-    int fraseCont = 0;
 
 
     while ((c = fgetc(arq)) != EOF)
@@ -204,28 +199,28 @@ int main()
 ///////////////////////////////////////////////////////////////////////////
 
 
-    NODO* listaArvoresOLD[tamArvores];
+    char listaArvoresOLD[tamArvores];
     for(int i=0; i<tamArvores; i++) //Clone da arvore atual antes das operacoes realizadas
     {
-        listaArvoresOLD[i] = listaArvores[i];
+        listaArvoresOLD[i] = listaArvores[i]->let;
     }
 
 
 
-    for(int i = 0  ; i<tamArvores - 1  ; i++)   //Arvore e montada
+    for(int i = tamArvores-1  ; i> 0  ; i--)   //Arvore e montada
     {
         NODO* t = NULL;
-        inserir(&t, listaArvores[tamArvores - i - 1]->valor + listaArvores[tamArvores - i - 2]->valor, 'Z' );
-        t->esq = listaArvores[tamArvores - i - 1];
-        t->dir = listaArvores[tamArvores - i - 2];
-        listaArvores[tamArvores - i - 2] = t;
-        bubbleSort(listaArvores,tamArvores);
+        inserir(&t, listaArvores[i]->valor + listaArvores[i-1]->valor, 'Z');
+        t->esq = listaArvores[i];
+        t->dir = listaArvores[i-1];
+        listaArvores[i-1] = t;
+        bubbleSort(listaArvores, i);
     }
     printree(listaArvores[0],0);
 //////////////////////////////////////////////////////////////////////////////////
 
 
-    FILE* writtenArq = fopen("tabela.txt", "w"); //Arquivo de escrita
+    FILE* writtenArq = fopen("tabela.piz", "w"); //Arquivo de escrita
     if(writtenArq == NULL)
     {
         printf("Impossível criar arq!\n");
@@ -233,13 +228,19 @@ int main()
         exit(EXIT_FAILURE);
     }
 
+    FILE* codificacaoArq = fopen("resultados.piz", "w");
+
+
     for(int i = 0; i < tamArvores; i++) //Escreve os caracteres e seus respectivos binarios
     {
-        char c[] = {0};
-        pesquisar(*listaArvores,listaArvoresOLD[i]->let, c);
-        fprintf(arq, "Caracter: %c\tBinario: %s\n", listaArvoresOLD[i]->let,strrev(c));
+        char ssss[] = {0};
+        pesquisar(*listaArvores,listaArvoresOLD[i], ssss);
+        fprintf(codificacaoArq,"Caracter: %c\tBinario: %s\n", listaArvoresOLD[i],strrev(ssss));
     }
-    fprintf(arq, "\nFrase: \t");
+    /*char z[] = {0};
+    pesquisar(*listaArvores,'m', z);
+    printf("\n%c\n",strrev(z));*/
+
 
 
     FILE* arq2 = fopen("teste.txt", "r");
@@ -248,7 +249,7 @@ int main()
 
     while ((c = fgetc(arq2)) != EOF)  //Escreve a mensagem codificada
     {
-         char caract[] = {0};
+        char caract[] = {0};
         pesquisar(*listaArvores,c, caract);
         fprintf(arq, "%s", strrev(caract));
 
@@ -257,7 +258,14 @@ int main()
 
 
     fclose(arq);
-    printf("\nDados gravados em tabela.txt\n");
+    fclose(arq2);
+    fclose(codificacaoArq);
+    fclose(writtenArq);
+    printf("\nDados gravados em resultados.piz\n");
+    printf("\nDados gravados em tabela.piz\n");
 
     return 0;
 }
+
+
+
