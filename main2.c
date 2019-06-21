@@ -1,119 +1,139 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-
-
-
-typedef struct tree
+struct Node
 {
-  char a;
-  int b;
-  struct tree* right;
-  struct tree* left;
-} Tree;
+    int valor;
+    char let;
+    struct Node* esq;
+    struct Node* dir;
+};
 
-Tree* listaArvores;
-int tamListaArvores = 0;
+typedef struct Node NODO;
 
+// prototipos
+void inserir(NODO** arv, int val, char c);
+void mostrar(NODO* arv);
+NODO* pesquisar(NODO* arv, int val);
 
-void insereListaArvores(Tree arv) {
-    listaArvores[tamListaArvores++] = arv;
-}
+// código
 
-int freqs[256];
-
-
-int comparator(const void* b1, const void* b2){
-    Tree *a = (Tree *) b1;
-    Tree *b = (Tree *) b2;
-   return b->b - a->b;
-}
-
-
-
-Tree* createTree(){return NULL;}
-int treeIsEmpty(Tree* t){return t == NULL;}
-
-void insertTree(Tree** t, int c, char d){
-
-  if(*t == NULL){
-    *t = (Tree*)malloc(sizeof(Tree));
-    (*t)->left = NULL;
-    (*t)->right = NULL;
-    (*t)->a = d;
-    (*t)->b = c;
-  } else {
-      return;
-  }
-}
-
-void showTree(Tree* arv)
+void inserir(NODO** arv, int val, char c)
 {
-if (arv == NULL) return;
+    if ( *arv == NULL )
+    {
+        NODO* novo;
+        novo = malloc(sizeof(NODO));
+        novo->valor = val;   //(*novo).valor = val;
+        novo->let = c;
+        novo->esq = NULL;
+        novo->dir = NULL;
 
-    showTree(arv->left);
-    printf("{%d,%c}", arv->b, arv->a);
-    showTree(arv->right);
+        *arv = novo;
+    }
+    else
+    {
+        //if ( val < (**arv)valor)
+        if ( val < (*arv)->valor)
+            //inserir(&((**arv).esq),val);
+            inserir(&((*arv)->esq), val, c);
+        else
+            inserir(& ((*arv)->dir), val, c);
+    }
 }
 
-Tree* pesquisar(Tree* arv, int val) {
-    if ( arv ==NULL) return NULL;
+NODO* pesquisar(NODO* arv, int val)
+{
+    if ( arv ==NULL)
+        return NULL;
 
-    if ( arv->b == val)
+    if ( arv->valor == val)
         return arv;
-    else if ( arv->b > val)
-            return pesquisar(arv->left, val);
-         else
-            return pesquisar(arv->right, val);
+    else if ( arv->valor > val)
+        return pesquisar(arv->esq, val);
+    else
+        return pesquisar(arv->dir, val);
 }
 
-void mostrar(Tree* arv) {
-    if (arv == NULL) return;
 
-    printf("(#{%d,%c}", arv->b, arv->a);
-    mostrar(arv->left);
-    mostrar(arv->right);
+
+void mostrar(NODO* arv)
+{
+    if (arv == NULL)
+        return;
+
+    printf("#(%c,%d", arv->let, arv->valor);
+    mostrar(arv->esq);
+    mostrar(arv->dir);
     printf(")");
 
 }
 
-
-
-void insereArvoreArray(Tree arv, int e, Tree* listadeArvores) {
-    listadeArvores[e] = arv;
-}
-
-void arrayIntoTree(){
-    int e = sizeof(listaArvores);
-    Tree* lista = malloc(sizeof(Tree)*256);
-    Tree* t = createTree();
-    lista = listaArvores;
-    while(e != 0){
-        if(lista[e].b <= lista[e-1].b){
-            Tree* v = createTree();
-            int z = lista[e].b + lista[e-1].b;
-            insertTree(&v, z, 'Z');
-            insertTree(&(*v).left, lista[e-1].b, lista[e-1].a);
-            insertTree(&(*v).right, lista[e].b, lista[e].a);
-            mostrar(v);
-            printf("\n");
-            e -= 1;
-            insereArvoreArray(*v,e,lista);
-        }
-        if(lista[e].b > lista[e-1].b){
-            Tree* v = createTree();
-            int z = lista[e].b + lista[e-1].b;
-            insertTree(&v, z, 'Z');
-            insertTree(&(*v).left, lista[e].b, lista[e].a);
-            insertTree(&(*v).right, lista[e-1].b, lista[e-1].a);
-            mostrar(v);
-            printf("\n");
-            e -= 1;
-            insereArvoreArray(*v,e,lista);
+void bubbleSort(NODO* vet[], int count)
+{
+    for (int i = 0; i < count; i++)
+    {
+        for (int j = 0; j < count; j++)
+        {
+            if (vet[j]->valor < vet[i]->valor)
+            {
+                NODO* aux = vet[i];
+                vet[i] = vet[j];
+                vet[j] = aux;
+            }
         }
     }
 }
+
+int freqs[256];
+NODO* listaArvores;
+
+
+/*void insereListaArvores(NODO arv) {
+    listaArvores[tamListaArvores++] = arv;
+}*/
+
+
+void padding ( char ch, int n )
+{
+    int i;
+
+    for ( i = 0; i < n; i++ )
+        putchar ( ch );
+}
+
+
+void printree( NODO* root, int level )  //char** table, char* binary, int column
+{
+    int i;
+    // Change to test for leaf
+    if(root == NULL)
+    {
+        // table[column] = &node->letter;
+        // table[column+1] = binary;
+        // column = column + 2;
+        padding ('\t', level);
+        puts ("~");
+    }
+    else
+    {
+        printree(root->dir, level + 1 );
+        // RIGHT
+        // strcat(binary, "1");
+        // gentable(node->right, table, binary, column);
+        padding('\t', level );
+        printf("%c:%d\n", root->let, root->valor);
+        printree(root->esq, level + 1 );
+        // LEFT
+        // strcat(binary, "0");
+        // gentable(node->left, table, binary, column);
+    }
+}
+
+
+
+
+
 
 
 
@@ -121,57 +141,96 @@ int main()
 {
     /*Leitura de Arquivo*/
 
-    listaArvores = malloc(sizeof(Tree)*256);
-    tamListaArvores = 0;
+    listaArvores = malloc(sizeof(NODO)*256);
+
 
     FILE* arq = fopen("teste.txt", "r");
-    if(arq == NULL) {
+    if(arq == NULL)
+    {
         printf("Erro! Arquivo nao encontrado!\n");
         exit(EXIT_FAILURE);
     }
     // Leitura
-    char c;
 
     char frase [100];
     char letra;
-    for (int i = 0; i<256; i++) freqs[i]=0;
-    while(fgets(frase, 200, arq) != NULL)
-        printf("%s\n", frase);
+
+    char c;
+    int freqs[256] = {0};
+    int count = 0;
+
+
+    while ((c = fgetc(arq)) != EOF)
+    {
+
+        freqs[c]++;
+        if(freqs[c] == 1)
+        {
+            count++;
+        }
+    }
     fclose(arq); //Fecha o arquivo
 
-    for(int x=0; frase[x] != '\0'; x++)
-    {
-        freqs[frase[x]]++;
-    }
 
-    for(int i=0;i<256;i++) {
-        if (freqs[i]) {
-              Tree *arv = malloc(sizeof(Tree));
-              arv->a = i;
-              arv->b = freqs[i];
-              arv->left = NULL;
-              arv->right = NULL;
-              printf("freq(%c): %d\n", i, freqs[i]);
-              insereListaArvores(*arv);
+
+    int tamArvores = 0;
+    NODO* listaArvores[] = {NULL};
+
+
+    for(int i=0; i<256; i++)
+    {
+        if (freqs[i]>0)
+        {
+            inserir(&listaArvores[tamArvores], freqs[i], i);
+            tamArvores++;
+            printf("freq(%c): %d\n", i, freqs[i]);
+
         }
     }
 
-    printf("lista arvores nao ordenado...\n");
-    for(int i=0;i<tamListaArvores;i++) {
-         printf("(%c:%d) ", listaArvores[i].a, listaArvores[i].b);
-    }
-    printf("size: %d\n", tamListaArvores);
+    char letras[tamArvores];
 
-    qsort(listaArvores, tamListaArvores, sizeof(Tree ), comparator);
+    printf("lista arvores nao ordenado...\n");
+    for(int i=0; i<tamArvores; i++)
+    {
+        printf("(%c:%d) ", listaArvores[i]->let, listaArvores[i]->valor);
+    }
+    printf("size: %d\n", tamArvores);
+
+    bubbleSort(listaArvores,tamArvores);
 
     printf("\nOrdenado...\n");
-    for(int i=0;i<tamListaArvores;i++) {
-         printf("(%c:%d)", listaArvores[i].a, listaArvores[i].b);
+    for(int i=0; i<tamArvores; i++)
+    {
+        printf("(%c:%d)", listaArvores[i]->let, listaArvores[i]->valor);
+        letras[tamArvores - i] = listaArvores[i]->let;
     }
     printf("\n");
 
-    arrayIntoTree();
+
+
+
+    //arrayIntoTree();
+
+    for(int i = 0  ; i<tamArvores - 1  ; i++)
+    {
+        NODO* t = NULL;
+        inserir(&t, listaArvores[tamArvores - i - 1]->valor + listaArvores[tamArvores - i - 2]->valor, 'Z' );
+        t->esq = listaArvores[tamArvores - i - 1];
+        t->dir = listaArvores[tamArvores - i - 2];
+        listaArvores[tamArvores - i - 2] = t;
+        bubbleSort(listaArvores,tamArvores);
+
+
+    }
+    printree(listaArvores[0],0);
+
+
+
+
+
 
     return 0;
 }
+
 
